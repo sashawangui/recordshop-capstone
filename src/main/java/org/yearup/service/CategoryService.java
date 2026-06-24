@@ -1,6 +1,9 @@
 package org.yearup.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.yearup.models.Category;
 import org.yearup.repository.CategoryRepository;
 
@@ -21,9 +24,16 @@ public class CategoryService
         return categoryRepository.findAll();
     }
 
-    public Category getById(int categoryId)
+    @GetMapping("{id}")
+    public ResponseEntity<Category> getById(@PathVariable int id)
     {
-        return categoryRepository.findById(categoryId).orElse(null);
+        Category category = categoryService.getById(id);
+
+        if (category != null)
+        {
+            return ResponseEntity.ok().body(category);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     public Category create(Category category)

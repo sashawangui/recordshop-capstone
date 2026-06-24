@@ -42,14 +42,19 @@ public class CategoriesController
 
     // add the appropriate annotation for a get action
     @GetMapping("{id}")
-    public Category getById(@PathVariable int id)
+    public ResponseEntity<Category> getById(@PathVariable int id)
     {
         // get the category by id
-        return categoryService.getById(id);
+        Category category = categoryService.getById(id);
+        if (category != null)
+        {
+            return ResponseEntity.ok().body(category);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     // the url to return all products in category 1 would look like this
-//     https://localhost:8080/categories/1/products
+    //https://localhost:8080/categories/1/products
     @GetMapping("{categoryId}/products")
     public List<Product> getProductsByCategoryId(@PathVariable int categoryId)
     {
@@ -76,7 +81,6 @@ public class CategoriesController
         // update the category by id and return the updated category (200 OK)
         return categoryService.update(id, category);
     }
-
 
     // add annotation to call this method for a DELETE action - the url path must include the categoryId
     @DeleteMapping("{id}")
