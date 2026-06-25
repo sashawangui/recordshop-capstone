@@ -24,16 +24,9 @@ public class CategoryService
         return categoryRepository.findAll();
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Category> getById(@PathVariable int id)
+    public Category getById(int id)
     {
-        Category category = categoryService.getById(id);
-
-        if (category != null)
-        {
-            return ResponseEntity.ok().body(category);
-        }
-        return ResponseEntity.notFound().build();
+        return categoryRepository.findById(id).orElse(null);
     }
 
     public Category create(Category category)

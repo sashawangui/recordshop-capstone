@@ -41,18 +41,6 @@ public class CategoriesController
     }
 
     // add the appropriate annotation for a get action
-    @GetMapping("{id}")
-    public ResponseEntity<Category> getById(@PathVariable int id)
-    {
-        // get the category by id
-        Category category = categoryService.getById(id);
-        if (category != null)
-        {
-            return ResponseEntity.ok().body(category);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
     // the url to return all products in category 1 would look like this
     //https://localhost:8080/categories/1/products
     @GetMapping("{categoryId}/products")
@@ -61,6 +49,16 @@ public class CategoriesController
         // get a list of product by categoryId
         return productService.listByCategoryId(categoryId);
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Category> getById(@PathVariable int id) {
+        Category category = categoryService.getById(id);
+        if (category == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(category);
+    }
+
 
     // add annotation to call this method for a POST action
     // add annotation8 to ensure that only an ADMIN can call this function
@@ -77,9 +75,14 @@ public class CategoriesController
     @PutMapping("{id}")
     // add annotation to ensure that only an ADMIN can call this function
     @PreAuthorize("hasRole('ADMIN')")
-    public Category updateCategory(@PathVariable int id, @RequestBody Category category) {
-        // update the category by id and return the updated category (200 OK)
-        return categoryService.update(id, category);
+    public ResponseEntity<Category> updateCategory(@PathVariable int id,
+                                                   @RequestBody Category category) {
+        Category existing = categoryService.getById(id);
+        if (existing == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Category updated = categoryService.update(id, category);
+        return ResponseEntity.ok(updated);
     }
 
     // add annotation to call this method for a DELETE action - the url path must include the categoryId
