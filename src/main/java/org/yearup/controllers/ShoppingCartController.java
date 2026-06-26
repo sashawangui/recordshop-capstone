@@ -90,4 +90,15 @@ public class ShoppingCartController
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
+    @PostMapping("checkout")
+    public ResponseEntity<ShoppingCart> checkout(Principal principal)
+    {
+        String userName = principal.getName();
+        User user = userService.getByUserName(userName);
+        int userId = user.getId();
+
+        ShoppingCart cart = shoppingCartService.clearCart(userId);
+        return new ResponseEntity<>(cart, HttpStatus.OK);
+    }
+
 }
