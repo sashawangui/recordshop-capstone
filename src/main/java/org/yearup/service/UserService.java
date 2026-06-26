@@ -37,7 +37,7 @@ public class UserService
         User user = userRepository.findByUsername(username);
         return user != null ? user.getId() : -1;
     }
-
+//duplicate avoidance logic
     public boolean exists(String username)
     {
         return userRepository.existsByUsername(username);
